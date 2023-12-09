@@ -15,7 +15,7 @@ public class CountriesEntity {
 	
 	@Id
 	@Column(name="country_id",length = 2)
-	private char countryId;
+	private String countryId;
 	
 	@Column(name="country_name")
 	private String countryName;

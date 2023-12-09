@@ -8,4 +8,5 @@ import com.hr.entity.LocationsEntity;
 @Repository
 public interface LocationsRepository extends JpaRepository<LocationsEntity, Integer> {
 
+	
 }
