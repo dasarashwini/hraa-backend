@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hr.dto.LocationsPojo;
 import com.hr.service.LocationsService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1/location")
 public class LocationsController {
@@ -25,14 +27,14 @@ public class LocationsController {
 	@Autowired
 	LocationsService locationsService;
 	
-	@PostMapping
-	ResponseEntity<String> addLocations(@RequestBody LocationsPojo newLocations) {
+	@PostMapping("/add")
+	ResponseEntity<String> addLocations(@RequestBody @Valid LocationsPojo newLocations) {
 		String msg=locationsService.addLocations(newLocations);
 		return new ResponseEntity<String>(msg,HttpStatus.OK);
 	}
 	
 	@PutMapping
-	ResponseEntity<String> updateLocations(@RequestBody LocationsPojo newLocations) {
+	ResponseEntity<String> updateLocations(@Valid @RequestBody LocationsPojo newLocations) {
 		String upmsg=locationsService.updateLocations(newLocations);
 		return new ResponseEntity<String>(upmsg,HttpStatus.ACCEPTED);
 	}
