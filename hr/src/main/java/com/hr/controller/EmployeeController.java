@@ -21,6 +21,8 @@ import com.hr.entity.EmployeesEntity;
 import com.hr.entity.JobsEntity;
 import com.hr.service.EmployeeService;
 
+import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api/v1/employees")
 public class EmployeeController {
@@ -29,81 +31,81 @@ public class EmployeeController {
 	EmployeeService employeeService;
 
 	@PostMapping
-	public ResponseEntity<String> addEmployee(@RequestBody EmployeesPojo newEmployee) {
+	public ResponseEntity<String> addEmployee(@Valid @RequestBody EmployeesPojo newEmployee) {
 		return ResponseEntity.ok(employeeService.addEmployee(newEmployee));
 	}
 
 	@DeleteMapping("/{id}")
-	public String DeleteByEmployeeId(@PathVariable("id") int id) {
-		return employeeService.DeleteByEmployeeId(id);
+	public ResponseEntity<String> DeleteByEmployeeId(@Valid @PathVariable("id") int id) {
+		return ResponseEntity.ok(employeeService.DeleteByEmployeeId(id));
 	}
   
 	@GetMapping("/findfname/{firstName}")
-	public EmployeesPojo findByFirstName(@PathVariable("firstName") String firstName) {
-		return employeeService.findByFirstName(firstName);
+	public ResponseEntity<EmployeesPojo> findByFirstName(@Valid @PathVariable("firstName") String firstName) {
+		return ResponseEntity.ok(employeeService.findByFirstName(firstName));
 	}
 
 	@GetMapping("/findemail/{email}")
-	public EmployeesPojo findByEmail(@PathVariable("email") String email) {
+	public EmployeesPojo findByEmail(@Valid @PathVariable("email") String email) {
 		return employeeService.findByEmail(email);
 	}
 
 	@GetMapping("/findphone/{phone}")
-	public EmployeesPojo findByphoneNumber(@PathVariable("phone") String phoneNumber) {
-		return employeeService.findByphoneNumber(phoneNumber);
+	public ResponseEntity<EmployeesPojo> findByphoneNumber(@Valid @PathVariable("phone") String phoneNumber) {
+		return ResponseEntity.ok(employeeService.findByphoneNumber(phoneNumber));
 	}
 
 	@GetMapping("/findAllEmployeeWithNoCommission")
-	public List<EmployeesPojo> findAllEmployeeWithNoCommission() {
-		return employeeService.findAllEmployeeWithNoCommission();
+	public ResponseEntity<List<EmployeesPojo>> findAllEmployeeWithNoCommission() {
+		return ResponseEntity.ok(employeeService.findAllEmployeeWithNoCommission());
 	}
 
 	@PutMapping
-	public String modifyEmployee(@RequestBody EmployeesPojo newEmployee) {
-		return employeeService.UpdateEmployee(newEmployee);
+	public ResponseEntity<String> modifyEmployee(@Valid @RequestBody EmployeesPojo newEmployee) {
+		return ResponseEntity.ok(employeeService.UpdateEmployee(newEmployee));
 	}
 
 	@GetMapping("/{deptId}")
-	public List<EmployeesEntity> getAllEmployeesByDepartmentId(@PathVariable("deptId") int deptId) {
-		return employeeService.getAllEmployeesByDepartmentId(deptId);
+	public ResponseEntity<List<EmployeesEntity>> getAllEmployeesByDepartmentId(@Valid @PathVariable("deptId") int deptId) {
+		return ResponseEntity.ok(employeeService.getAllEmployeesByDepartmentId(deptId));
 	}
 	
 	@GetMapping("/getCount")
-	 public List<Map<String, Object>> countEmployeesByDepartment(){
-		return employeeService.countEmployeesByDepartment();
+	 public ResponseEntity<List<Map<String, Object>>> countEmployeesByDepartment(){
+		return ResponseEntity.ok(employeeService.countEmployeesByDepartment());
 	}
 	
 	@GetMapping("/getMaxSalary/{empId}")
-	 public Map<String, Object> findMaxSalaryOfJobByEmployeeId(@PathVariable("empId") int employeeId) {
-		return employeeService.findMaxSalaryOfJobByEmployeeId(employeeId);
+	 public ResponseEntity<Map<String, Object>> findMaxSalaryOfJobByEmployeeId(@Valid @PathVariable("empId") int employeeId) {
+		return ResponseEntity.ok(employeeService.findMaxSalaryOfJobByEmployeeId(employeeId));
 	}
 	
 	@PutMapping("/{deptId}/{pct}")
-	 public String updateCommissionPercentageForSalesDepartment(@PathVariable("deptId") int departmentId,@PathVariable("pct") double newCommissionPct) {
-		return employeeService.updateCommissionPercentageForSalesDepartment(departmentId, newCommissionPct);
+	 public ResponseEntity<String> updateCommissionPercentageForSalesDepartment(@Valid @PathVariable("deptId") int departmentId,@PathVariable("pct") double newCommissionPct) {
+		return ResponseEntity.ok(employeeService.updateCommissionPercentageForSalesDepartment(departmentId, newCommissionPct));
 	}
 	
 	@GetMapping("/TotalCmsPct/{deptId}")
-	public Map<String, Object> findTotalCommissionIssuedToEmployeeByDepartment(@PathVariable("deptId") int departmentId) {
+	public ResponseEntity<Map<String, Object>> findTotalCommissionIssuedToEmployeeByDepartment(@Valid @PathVariable("deptId") int departmentId) {
 		 double totalCommission = employeeService.findTotalCommissionIssuedToEmployeeByDepartment(departmentId);
 	        Map<String, Object> response = new HashMap<>();
 	        response.put("departmentId", departmentId);
 	        response.put("sum", totalCommission);
-	        return response;
+	        return ResponseEntity.ok(response);
 	}
 	
 	@GetMapping("/locationWiseCountryOfEmployees")
-	public List<Map<String, Object>> countAllEmployeesGroupByLocation() {
-		return employeeService.countAllEmployeesGroupByLocation();
+	public ResponseEntity<List<Map<String, Object>>> countAllEmployeesGroupByLocation() {
+		return ResponseEntity.ok(employeeService.countAllEmployeesGroupByLocation());
 	}
 	
 	@GetMapping("/hireDate/{fromDate}/{toDate}")
-	public List<EmployeesEntity> listAllEmployeesByHireDate(@PathVariable("fromDate") Date fromHireDate,@PathVariable("toDate") Date toHireDate){
-		return employeeService.listAllEmployeesByHireDate(fromHireDate, toHireDate);
+	public ResponseEntity<List<EmployeesEntity>> listAllEmployeesByHireDate(@Valid @PathVariable("fromDate") Date fromHireDate,@PathVariable("toDate") Date toHireDate){
+		return ResponseEntity.ok(employeeService.listAllEmployeesByHireDate(fromHireDate, toHireDate));
 	}
 
 	@GetMapping("/findAllOpenPositions")
-	public List<Map<String, Object>> FindAllOpenPositionsWhichWereNotFilled() {
-		return employeeService.FindAllOpenPositionsWhichWereNotFilled();
+	public ResponseEntity<List<Map<String, Object>>> FindAllOpenPositionsWhichWereNotFilled() {
+		return ResponseEntity.ok(employeeService.FindAllOpenPositionsWhichWereNotFilled());
 	}	
 }

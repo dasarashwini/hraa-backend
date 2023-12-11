@@ -12,12 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.hr.dao.EmployeesRepository;
+import com.hr.dto.CountriesPojo;
 import com.hr.dto.DepartmentsPojo;
 import com.hr.dto.EmployeesPojo;
 import com.hr.dto.JobsPojo;
+import com.hr.dto.LocationsPojo;
+import com.hr.dto.RegionsPojo;
+import com.hr.entity.CountriesEntity;
 import com.hr.entity.DepartmentsEntity;
 import com.hr.entity.EmployeesEntity;
 import com.hr.entity.JobsEntity;
+import com.hr.entity.LocationsEntity;
+import com.hr.entity.RegionsEntity;
 
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
@@ -65,6 +71,18 @@ public class EmployeeServiceImpl implements EmployeeService {
 				employeesPojo.setJobsPojo(jobsPojo);
 					DepartmentsPojo departmentsPojo = new DepartmentsPojo();
 					BeanUtils.copyProperties(employeesentity.getDepartmentsEntity(), departmentsPojo);
+						LocationsEntity locationsEntity = employeesentity.getDepartmentsEntity().getLocationsEntity();
+						LocationsPojo locationsPojo = new LocationsPojo();
+						BeanUtils.copyProperties(locationsEntity, locationsPojo);
+							CountriesEntity countriesEntity = employeesentity.getDepartmentsEntity().getLocationsEntity().getCountriesEntity();
+							CountriesPojo countriesPojo = new CountriesPojo();
+							BeanUtils.copyProperties(countriesEntity, countriesPojo);
+								RegionsEntity regionsEntity = employeesentity.getDepartmentsEntity().getLocationsEntity().getCountriesEntity().getRegionsEntity();
+								RegionsPojo regionsPojo = new RegionsPojo();
+								BeanUtils.copyProperties(regionsEntity, regionsPojo);
+								countriesPojo.setRegionsPojo(regionsPojo);
+							locationsPojo.setCountriesPojo(countriesPojo);
+						departmentsPojo.setLocationsPojo(locationsPojo);
 					employeesPojo.setDepartmentsPojo(departmentsPojo);
 			return employeesPojo;
 		}
@@ -72,30 +90,54 @@ public class EmployeeServiceImpl implements EmployeeService {
 		/******* Finding the Employee By his Email Id ******/
 		@Override
 		public EmployeesPojo findByEmail(String email) {
-			EmployeesEntity employeesEntity = employeesRepository.findByEmail(email);
+			EmployeesEntity employeesentity = employeesRepository.findByEmail(email);
 			EmployeesPojo employeesPojo = new EmployeesPojo();
-			BeanUtils.copyProperties(employeesEntity, employeesPojo);
+			BeanUtils.copyProperties(employeesentity, employeesPojo);
 				JobsPojo jobsPojo =   new JobsPojo();
-				BeanUtils.copyProperties(employeesEntity.getJobsEntity(), jobsPojo);
+				BeanUtils.copyProperties(employeesentity.getJobsEntity(), jobsPojo);
 				employeesPojo.setJobsPojo(jobsPojo);
 					DepartmentsPojo departmentsPojo = new DepartmentsPojo();
-					BeanUtils.copyProperties(employeesEntity.getDepartmentsEntity(), departmentsPojo);
-					employeesPojo.setDepartmentsPojo(departmentsPojo);
+					BeanUtils.copyProperties(employeesentity.getDepartmentsEntity(), departmentsPojo);
+					LocationsEntity locationsEntity = employeesentity.getDepartmentsEntity().getLocationsEntity();
+					LocationsPojo locationsPojo = new LocationsPojo();
+					BeanUtils.copyProperties(locationsEntity, locationsPojo);
+						CountriesEntity countriesEntity = employeesentity.getDepartmentsEntity().getLocationsEntity().getCountriesEntity();
+						CountriesPojo countriesPojo = new CountriesPojo();
+						BeanUtils.copyProperties(countriesEntity, countriesPojo);
+							RegionsEntity regionsEntity = employeesentity.getDepartmentsEntity().getLocationsEntity().getCountriesEntity().getRegionsEntity();
+							RegionsPojo regionsPojo = new RegionsPojo();
+							BeanUtils.copyProperties(regionsEntity, regionsPojo);
+							countriesPojo.setRegionsPojo(regionsPojo);
+						locationsPojo.setCountriesPojo(countriesPojo);
+					departmentsPojo.setLocationsPojo(locationsPojo);
+			    employeesPojo.setDepartmentsPojo(departmentsPojo);
 			return employeesPojo;
 		}
 
 		/******* Finding the Employee By his Phone Number ******/
 		@Override
 		public EmployeesPojo findByphoneNumber(String phoneNumber) {
-			EmployeesEntity employeesEntity = employeesRepository.findByphoneNumber(phoneNumber);
+			EmployeesEntity employeesentity = employeesRepository.findByphoneNumber(phoneNumber);
 			EmployeesPojo employeesPojo = new EmployeesPojo();
-			BeanUtils.copyProperties(employeesEntity, employeesPojo);
+			BeanUtils.copyProperties(employeesentity, employeesPojo);
 				JobsPojo jobsPojo =   new JobsPojo();
-				BeanUtils.copyProperties(employeesEntity.getJobsEntity(), jobsPojo);
+				BeanUtils.copyProperties(employeesentity.getJobsEntity(), jobsPojo);
 				employeesPojo.setJobsPojo(jobsPojo);
 					DepartmentsPojo departmentsPojo = new DepartmentsPojo();
-					BeanUtils.copyProperties(employeesEntity.getDepartmentsEntity(), departmentsPojo);
-					employeesPojo.setDepartmentsPojo(departmentsPojo);
+					BeanUtils.copyProperties(employeesentity.getDepartmentsEntity(), departmentsPojo);
+					LocationsEntity locationsEntity = employeesentity.getDepartmentsEntity().getLocationsEntity();
+					LocationsPojo locationsPojo = new LocationsPojo();
+					BeanUtils.copyProperties(locationsEntity, locationsPojo);
+						CountriesEntity countriesEntity = employeesentity.getDepartmentsEntity().getLocationsEntity().getCountriesEntity();
+						CountriesPojo countriesPojo = new CountriesPojo();
+						BeanUtils.copyProperties(countriesEntity, countriesPojo);
+							RegionsEntity regionsEntity = employeesentity.getDepartmentsEntity().getLocationsEntity().getCountriesEntity().getRegionsEntity();
+							RegionsPojo regionsPojo = new RegionsPojo();
+							BeanUtils.copyProperties(regionsEntity, regionsPojo);
+							countriesPojo.setRegionsPojo(regionsPojo);
+						locationsPojo.setCountriesPojo(countriesPojo);
+					departmentsPojo.setLocationsPojo(locationsPojo);
+				employeesPojo.setDepartmentsPojo(departmentsPojo);
 			return employeesPojo;
 		}
 
