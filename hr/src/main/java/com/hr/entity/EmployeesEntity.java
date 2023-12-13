@@ -1,10 +1,11 @@
 package com.hr.entity;
 
-import java.math.BigDecimal;
 import java.sql.Date;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -13,17 +14,20 @@ import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.Data;
 
+
+
 @Data
 @Entity
 @Table(name="employees", schema = "hr")
 public class EmployeesEntity {
 	
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name="employee_id",length = 6)
 	private  int employeeId;
 	
 	@Column(name="first_name")
-	private String fristName;
+	private String firstName;
 	
 	@Column(name="last_name")
 	private String lastName;
@@ -49,7 +53,7 @@ public class EmployeesEntity {
 	private double commissionPct;
 	
 	@Column(name="manager_id",length = 6)
-	private Integer managerId;
+	private int managerId;
 	
 	@ManyToOne
 	@JoinColumn(name="department_id")

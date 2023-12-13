@@ -7,7 +7,7 @@ import lombok.Data;
 public class EmployeesPojo {
 	
 	private  int employeeId;
-	private String fristName;
+	private String firstName;
 	private String lastName;
 	private String email;
 	private int phoneNumber;
