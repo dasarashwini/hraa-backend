@@ -3,6 +3,6 @@ import lombok.Data;
 
 @Data
 public class ManagerPojo {
-	private DepartmentsPojo departmentsPojo;
-	private EmployeesPojo employeesPojo;
+	private int managerId;
+	private DepartmentsPojo departmentsPojo;	
 }
