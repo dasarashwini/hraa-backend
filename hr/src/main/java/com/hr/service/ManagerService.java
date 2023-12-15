@@ -1,5 +1,6 @@
 package com.hr.service;
 
+
 import org.springframework.stereotype.Service;
 
 import com.hr.dto.ManagerPojo;
@@ -12,4 +13,5 @@ public interface ManagerService {
 	public String updateManager(ManagerPojo managerPojo);
 	public String deleteManager(int managerId) throws ResourceNotFoundException;
 	public ManagerEntity findByManagerId(int id);
+
 }

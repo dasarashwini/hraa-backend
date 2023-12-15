@@ -1,9 +1,7 @@
 package com.hr.service;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.hr.dao.ManagerRepositoty;
 import com.hr.dto.ManagerPojo;
 import com.hr.entity.DepartmentsEntity;
@@ -20,9 +18,9 @@ public class ManagerServiceImpl implements ManagerService {
 	public String addManager(ManagerPojo managerPojo) {
 		ManagerEntity managerEntity = new ManagerEntity();
 		BeanUtils.copyProperties(managerPojo, managerEntity);
-		DepartmentsEntity departmentsEntity = new DepartmentsEntity();
-		BeanUtils.copyProperties(managerPojo.getDepartmentsPojo(), departmentsEntity);
-		managerEntity.setDepartmentsEntity(departmentsEntity);
+		  DepartmentsEntity departmentsEntity = new DepartmentsEntity();
+		  BeanUtils.copyProperties(managerPojo.getDepartmentsPojo(), departmentsEntity);
+		    managerEntity.setDepartmentsEntity(departmentsEntity);
 		managerRepositoty.save(managerEntity);
 		return " Manager Added Successfully ";
 	}
@@ -31,10 +29,10 @@ public class ManagerServiceImpl implements ManagerService {
 	public String updateManager(ManagerPojo managerPojo) {
 		ManagerEntity managerEntity = new ManagerEntity();
 		BeanUtils.copyProperties(managerPojo, managerEntity);
-		DepartmentsEntity departmentsEntity = new DepartmentsEntity();
-		BeanUtils.copyProperties(managerPojo.getDepartmentsPojo(), departmentsEntity);
-		managerEntity.setDepartmentsEntity(departmentsEntity);
-		managerRepositoty.save(managerEntity);
+		  DepartmentsEntity departmentsEntity = new DepartmentsEntity();
+		  BeanUtils.copyProperties(managerPojo.getDepartmentsPojo(), departmentsEntity);
+		    managerEntity.setDepartmentsEntity(departmentsEntity);
+		    managerRepositoty.save(managerEntity);
 		return "Manager Modified Successfully ";
 	}
 
@@ -54,7 +52,5 @@ public class ManagerServiceImpl implements ManagerService {
 	public ManagerEntity findByManagerId(int id) {
 		return managerRepositoty.findByManagerId(id);
 	}
-	
-	
-
 }
+

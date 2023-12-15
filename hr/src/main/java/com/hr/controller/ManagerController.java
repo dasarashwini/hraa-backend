@@ -42,4 +42,5 @@ public class ManagerController {
 	public ResponseEntity<ManagerEntity> findByManagerId(@PathVariable int id) {
 		return ResponseEntity.ok(managerService.findByManagerId(id));
 	}
+
 }

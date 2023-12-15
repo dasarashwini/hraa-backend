@@ -23,7 +23,7 @@ public class JobsServiceImpl implements JobsService {
 	
 	@Override
 	public String addnewJob(JobsPojo jobsPojo) throws ResourceAlreadyExistsException{
-		Optional<JobsEntity>jobEntity=jobsRepository.findById(jobsPojo.getJobId());
+		Optional<JobsEntity>jobEntity=jobsRepository.findById(jobsPojo.getJobTitle());
 		if(jobEntity.isPresent()) {
 			throw new ResourceAlreadyExistsException("Jobs with Title "+jobsPojo.getJobTitle()+"already Exists");
 		}

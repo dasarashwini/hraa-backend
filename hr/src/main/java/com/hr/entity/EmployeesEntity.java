@@ -5,7 +5,6 @@ import java.sql.Date;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -16,6 +15,8 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import lombok.Data;
+
+
 
 @Data
 @Entity
@@ -53,10 +54,6 @@ public class EmployeesEntity {
 	
 	@Column(name="commission_pct")
 	private double commissionPct;
-	
-	@ManyToOne
-	@JoinColumn(name="manager_id")
-	private ManagerEntity managerEntity;
 	
 	@ManyToOne
 	@JoinColumn(name="department_id")
