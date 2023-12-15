@@ -4,6 +4,7 @@ import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,8 +15,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
 import com.hr.dto.EmployeesPojo;
 import com.hr.entity.EmployeesEntity;
+import com.hr.entity.JobsEntity;
 import com.hr.service.EmployeeService;
 
 import jakarta.validation.Valid;
@@ -33,22 +36,22 @@ public class EmployeeController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> DeleteByEmployeeId(@Valid @PathVariable("id") int id) {
+	public ResponseEntity<String> DeleteByEmployeeId( @PathVariable("id") int id) {
 		return ResponseEntity.ok(employeeService.DeleteByEmployeeId(id));
 	}
   
 	@GetMapping("/findfname/{firstName}")
-	public ResponseEntity<EmployeesPojo> findByFirstName(@Valid @PathVariable("firstName") String firstName) {
+	public ResponseEntity<List<EmployeesPojo>> findByFirstName( @PathVariable("firstName") String firstName) {
 		return ResponseEntity.ok(employeeService.findByFirstName(firstName));
 	}
 
 	@GetMapping("/findemail/{email}")
-	public EmployeesPojo findByEmail(@Valid @PathVariable("email") String email) {
+	public EmployeesPojo findByEmail( @PathVariable("email") String email) {
 		return employeeService.findByEmail(email);
 	}
 
 	@GetMapping("/findphone/{phone}")
-	public ResponseEntity<EmployeesPojo> findByphoneNumber(@Valid @PathVariable("phone") String phoneNumber) {
+	public ResponseEntity<EmployeesPojo> findByphoneNumber( @PathVariable("phone") String phoneNumber) {
 		return ResponseEntity.ok(employeeService.findByphoneNumber(phoneNumber));
 	}
 
@@ -63,7 +66,7 @@ public class EmployeeController {
 	}
 
 	@GetMapping("/{deptId}")
-	public ResponseEntity<List<EmployeesEntity>> getAllEmployeesByDepartmentId(@Valid @PathVariable("deptId") int deptId) {
+	public ResponseEntity<List<EmployeesEntity>> getAllEmployeesByDepartmentId( @PathVariable("deptId") int deptId) {
 		return ResponseEntity.ok(employeeService.getAllEmployeesByDepartmentId(deptId));
 	}
 	
@@ -73,7 +76,7 @@ public class EmployeeController {
 	}
 	
 	@GetMapping("/getMaxSalary/{empId}")
-	 public ResponseEntity<Map<String, Object>> findMaxSalaryOfJobByEmployeeId(@Valid @PathVariable("empId") int employeeId) {
+	 public ResponseEntity<Map<String, Object>> findMaxSalaryOfJobByEmployeeId( @PathVariable("empId") int employeeId) {
 		return ResponseEntity.ok(employeeService.findMaxSalaryOfJobByEmployeeId(employeeId));
 	}
 	
@@ -83,7 +86,7 @@ public class EmployeeController {
 	}
 	
 	@GetMapping("/TotalCmsPct/{deptId}")
-	public ResponseEntity<Map<String, Object>> findTotalCommissionIssuedToEmployeeByDepartment(@Valid @PathVariable("deptId") int departmentId) {
+	public ResponseEntity<Map<String, Object>> findTotalCommissionIssuedToEmployeeByDepartment( @PathVariable("deptId") int departmentId) {
 		 double totalCommission = employeeService.findTotalCommissionIssuedToEmployeeByDepartment(departmentId);
 	        Map<String, Object> response = new HashMap<>();
 	        response.put("departmentId", departmentId);
@@ -97,7 +100,7 @@ public class EmployeeController {
 	}
 	
 	@GetMapping("/hireDate/{fromDate}/{toDate}")
-	public ResponseEntity<List<EmployeesEntity>> listAllEmployeesByHireDate(@Valid @PathVariable("fromDate") Date fromHireDate,@PathVariable("toDate") Date toHireDate){
+	public ResponseEntity<List<EmployeesEntity>> listAllEmployeesByHireDate( @PathVariable("fromDate") Date fromHireDate,@PathVariable("toDate") Date toHireDate){
 		return ResponseEntity.ok(employeeService.listAllEmployeesByHireDate(fromHireDate, toHireDate));
 	}
 

@@ -8,13 +8,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.hr.entity.EmployeesEntity;
+import com.hr.entity.JobsEntity;
 
 @Repository
 public interface EmployeesRepository extends JpaRepository<EmployeesEntity, Integer> {
-       public EmployeesEntity findByFirstName(String firstName);
+//	   public EmployeesEntity 
+       public List<EmployeesEntity> findAllByFirstName(String firstName);
        public EmployeesEntity findByEmail(String email);
-       public EmployeesEntity findByphoneNumber(String phoneNumber);
-       public  List<EmployeesEntity> findByHireDateBetween(Date fromHireDate,Date toHireDate);
+       public EmployeesEntity findByPhoneNumber(String phoneNumber);
+       public List<EmployeesEntity> findByHireDateBetween(Date fromHireDate,Date toHireDate);
        public List<EmployeesEntity> findByDepartmentsEntityDepartmentId(int departmentId);
        
        @Query
@@ -45,8 +47,12 @@ public interface EmployeesRepository extends JpaRepository<EmployeesEntity, Inte
        ("SELECT DISTINCT j.jobId, j.jobTitle FROM JobsEntity j, EmployeesEntity e WHERE j.jobId != e.jobsEntity.jobId")
         public List<Object[]> getAllOpenPositionswhichwasnotfilled();
         
+//       @Query
+//       ("SELECT DISTINCT e.jobsEntity.jobTitle FROM EmployeesEntity e WHERE e.departmentsEntity.departmentId = :departmentId IS NULL")
+//       public List<Object[]> getAllOpenPositionsJobsInDepartment(int departmentId);
+       
        @Query
-       ("SELECT DISTINCT e.jobsEntity.jobTitle FROM EmployeesEntity e WHERE e.departmentsEntity.departmentId = :departmentId AND e.managerId IS NULL")
-       public List<Object[]> getAllOpenPositionsJobsInDepartment(int departmentId);
+       ("SELECT COUNT(e) > 0 FROM EmployeesEntity e WHERE e.email = :email")   
+       public boolean existsByEmail(@Param("email") String email);
 }
   
