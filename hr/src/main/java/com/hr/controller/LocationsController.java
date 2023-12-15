@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +21,7 @@ import com.hr.service.LocationsService;
 
 import jakarta.validation.Valid;
 
+@Validated
 @RestController
 @RequestMapping("/api/v1/location")
 public class LocationsController {
@@ -30,7 +32,7 @@ public class LocationsController {
 	@PostMapping("/add")
 	ResponseEntity<String> addLocations(@RequestBody @Valid LocationsPojo newLocations) {
 		String msg=locationsService.addLocations(newLocations);
-		return new ResponseEntity<String>(msg,HttpStatus.OK);
+		return new ResponseEntity<String>(msg,HttpStatus.CREATED);
 	}
 	
 	@PutMapping

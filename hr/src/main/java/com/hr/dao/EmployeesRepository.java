@@ -8,7 +8,6 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import com.hr.entity.EmployeesEntity;
-import com.hr.entity.JobsEntity;
 
 @Repository
 public interface EmployeesRepository extends JpaRepository<EmployeesEntity, Integer> {
