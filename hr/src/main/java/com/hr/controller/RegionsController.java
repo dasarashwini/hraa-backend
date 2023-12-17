@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hr.dto.RegionsPojo;
 import com.hr.service.RegionsService;
 
-//@CrossOrigin
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/region")
 public class RegionsController {
