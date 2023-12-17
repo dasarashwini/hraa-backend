@@ -16,7 +16,7 @@ public class RegionsEntity {
 	
 	@Id
 	@Column(name="region_id")
-	private Integer regionId;
+	private int regionId;
 	
 	@Column(name="region_name")
 	private String regionName;
