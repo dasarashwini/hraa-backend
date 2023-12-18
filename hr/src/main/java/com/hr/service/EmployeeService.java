@@ -22,7 +22,7 @@ public interface EmployeeService {
 		public EmployeesPojo findByphoneNumber(String phoneNumber) throws ResourceNotFoundException;
 		public List<EmployeesPojo> findAllEmployeeWithNoCommission() throws ResourceNotFoundException;
 		public String UpdateEmployee(EmployeesPojo newEmployee) throws ResourceNotFoundException;	
-		public List<EmployeesEntity> getAllEmployeesByDepartmentId(int departmentId) throws ResourceNotFoundException; 
+		public List<EmployeesPojo> getAllEmployeesByDepartmentId(int departmentId) throws ResourceNotFoundException; 
 	    public List<Map<String, Object>> countEmployeesByDepartment() throws ResourceNotFoundException;
 		public Map<String, Object> findMaxSalaryOfJobByEmployeeId(int employeeId) throws ResourceNotFoundException;
 	    public String updateCommissionPercentageForSalesDepartment(int departmentId, double newCommissionPct);
@@ -30,4 +30,5 @@ public interface EmployeeService {
 	    public List<Map<String, Object>> countAllEmployeesGroupByLocation() throws ResourceNotFoundException;
 	    public List<EmployeesEntity> listAllEmployeesByHireDate(Date fromHireDate, Date toHireDate) throws ResourceNotFoundException;
 		public List<Map<String, Object>> FindAllOpenPositionsWhichWereNotFilled() throws ResourceNotFoundException;
+		public List<EmployeesPojo> findAllEmployees() throws ResourceNotFoundException;
 }

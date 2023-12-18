@@ -37,7 +37,7 @@ import com.hr.exceptions.ResourceNotFoundException;
 @Service
 public class EmployeeServiceImpl implements EmployeeService {
 	
-		private static final Object UserEntity = null;
+
 		@Autowired
 		EmployeesRepository employeesRepository;
 
@@ -95,7 +95,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 		@Override
 		public List<EmployeesPojo> findByFirstName(String firstName) throws ResourceNotFoundException{
 			List<EmployeesEntity> employeesentity = employeesRepository.findAllByFirstName(firstName);
-			if(employeesentity == null) {
+			if(employeesentity.isEmpty()) {
 				throw new ResourceNotFoundException(firstName+" Not Found");
 			}
 			List<EmployeesPojo> allEmployeesPojo = new ArrayList<>();
@@ -122,6 +122,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 								countriesPojo.setRegionsPojo(regionsPojo);
 							locationsPojo.setCountriesPojo(countriesPojo);
 						departmentsPojo.setLocationsPojo(locationsPojo);
+						UserPojo userPojo = new UserPojo();
+						BeanUtils.copyProperties(eachEmployeesEntity.getUserEntity(), userPojo);
+						employeesPojo.setUserPojo(userPojo);
 					employeesPojo.setDepartmentsPojo(departmentsPojo);
 				allEmployeesPojo.add(employeesPojo);
 			}
@@ -157,6 +160,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 								countriesPojo.setRegionsPojo(regionsPojo);
 							locationsPojo.setCountriesPojo(countriesPojo);
 						departmentsPojo.setLocationsPojo(locationsPojo);
+						UserPojo userPojo = new UserPojo();
+						BeanUtils.copyProperties(employeesentity.getUserEntity(), userPojo);
+						employeesPojo.setUserPojo(userPojo);
 					employeesPojo.setDepartmentsPojo(departmentsPojo);
 			return employeesPojo;
 		}
@@ -190,6 +196,9 @@ public class EmployeeServiceImpl implements EmployeeService {
 									countriesPojo.setRegionsPojo(regionsPojo);
 								locationsPojo.setCountriesPojo(countriesPojo);
 							departmentsPojo.setLocationsPojo(locationsPojo);
+							UserPojo userPojo = new UserPojo();
+							BeanUtils.copyProperties(employeesentity.getUserEntity(), userPojo);
+							employeesPojo.setUserPojo(userPojo);
 						employeesPojo.setDepartmentsPojo(departmentsPojo);
 				return employeesPojo;
 		}
@@ -236,22 +245,52 @@ public class EmployeeServiceImpl implements EmployeeService {
 							BeanUtils.copyProperties(newEmployee.getDepartmentsPojo(), departmentsEntity);
 							employeesEntity.setDepartmentsEntity(departmentsEntity);
 								UserEntity userEntity = new UserEntity();
-								BeanUtils.copyProperties(newEmployee.getUserPojo(), UserEntity);
+								BeanUtils.copyProperties(newEmployee.getUserPojo(), userEntity);
 								employeesEntity.setUserEntity(userEntity);
 						employeesRepository.save(employeesEntity);
 				return "Record Modified Successfully";
 			}
 			else {
 				throw new ResourceNotFoundException("Unable to find the Employee with Email "+email);
-			}
+			 }
 		}
 
 		/******* Getting the all Employees who are working in a particular department ******/
 		@Override
-		public List<EmployeesEntity> getAllEmployeesByDepartmentId(int departmentId) throws ResourceNotFoundException{	
+		public List<EmployeesPojo> getAllEmployeesByDepartmentId(int departmentId) throws ResourceNotFoundException{	
 			List<EmployeesEntity> allEmployees = employeesRepository.findAllEmployeesByDepartmentId(departmentId);
 			if(allEmployees!=null) {
-				return allEmployees;
+				List<EmployeesPojo> allEmployeesPojo = new ArrayList<>();
+				for(EmployeesEntity eachEmployeesEntity:allEmployees) {
+				EmployeesPojo employeesPojo = new EmployeesPojo();
+				BeanUtils.copyProperties(eachEmployeesEntity, employeesPojo);
+					JobsPojo jobsPojo =   new JobsPojo();
+					BeanUtils.copyProperties(eachEmployeesEntity.getJobsEntity(), jobsPojo);
+					employeesPojo.setJobsPojo(jobsPojo);
+						ManagerPojo ManagerPojo = new ManagerPojo();
+						BeanUtils.copyProperties(eachEmployeesEntity.getManagerEntity(), ManagerPojo);
+						employeesPojo.setManagerPojo(ManagerPojo);
+							DepartmentsPojo departmentsPojo = new DepartmentsPojo();
+							BeanUtils.copyProperties(eachEmployeesEntity.getDepartmentsEntity(), departmentsPojo);
+								LocationsEntity locationsEntity = eachEmployeesEntity.getDepartmentsEntity().getLocationsEntity();
+								LocationsPojo locationsPojo = new LocationsPojo();
+								BeanUtils.copyProperties(locationsEntity, locationsPojo);
+									CountriesEntity countriesEntity = eachEmployeesEntity.getDepartmentsEntity().getLocationsEntity().getCountriesEntity();
+									CountriesPojo countriesPojo = new CountriesPojo();
+									BeanUtils.copyProperties(countriesEntity, countriesPojo);
+										RegionsEntity regionsEntity = eachEmployeesEntity.getDepartmentsEntity().getLocationsEntity().getCountriesEntity().getRegionsEntity();
+										RegionsPojo regionsPojo = new RegionsPojo();
+										BeanUtils.copyProperties(regionsEntity, regionsPojo);
+									countriesPojo.setRegionsPojo(regionsPojo);
+								locationsPojo.setCountriesPojo(countriesPojo);
+							departmentsPojo.setLocationsPojo(locationsPojo);
+							UserPojo userPojo = new UserPojo();
+							BeanUtils.copyProperties(eachEmployeesEntity.getUserEntity(), userPojo);
+							employeesPojo.setUserPojo(userPojo);
+						employeesPojo.setDepartmentsPojo(departmentsPojo);
+					allEmployeesPojo.add(employeesPojo);
+				}
+				return allEmployeesPojo;
 			}
 			else {
 				throw new ResourceNotFoundException("No Record Found");
@@ -352,8 +391,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 		     List<Map<String, Object>> response = new ArrayList<>();
 		     for (Object[] results : result) {
 		        Map<String, Object> entry = new HashMap<>();
-		        entry.put("job_id", results[0]); // Assuming the first element is job_id
-		        entry.put("job_title", results[1]); // Assuming the second element is job_title
+		        entry.put("jobId", results[0]); // Assuming the first element is job_id
+		        entry.put("jobTitle", results[1]); // Assuming the second element is job_title
 		        response.add(entry);
 		     }
 		     return response;
@@ -363,6 +402,44 @@ public class EmployeeServiceImpl implements EmployeeService {
 		     }
 		  }
 
+		@Override
+		public List<EmployeesPojo> findAllEmployees() throws ResourceNotFoundException {
+			List<EmployeesEntity> employeesentity = employeesRepository.findAll();
+			if(employeesentity.isEmpty()) {
+				throw new ResourceNotFoundException(" No Record Found");
+			}
+			List<EmployeesPojo> allEmployeesPojo = new ArrayList<>();
+			for(EmployeesEntity eachEmployeesEntity:employeesentity) {
+			EmployeesPojo employeesPojo = new EmployeesPojo();
+			BeanUtils.copyProperties(eachEmployeesEntity, employeesPojo);
+				JobsPojo jobsPojo =   new JobsPojo();
+				BeanUtils.copyProperties(eachEmployeesEntity.getJobsEntity(), jobsPojo);
+				employeesPojo.setJobsPojo(jobsPojo);
+					ManagerPojo ManagerPojo = new ManagerPojo();
+					BeanUtils.copyProperties(eachEmployeesEntity.getManagerEntity(), ManagerPojo);
+					employeesPojo.setManagerPojo(ManagerPojo);
+						DepartmentsPojo departmentsPojo = new DepartmentsPojo();
+						BeanUtils.copyProperties(eachEmployeesEntity.getDepartmentsEntity(), departmentsPojo);
+							LocationsEntity locationsEntity = eachEmployeesEntity.getDepartmentsEntity().getLocationsEntity();
+							LocationsPojo locationsPojo = new LocationsPojo();
+							BeanUtils.copyProperties(locationsEntity, locationsPojo);
+								CountriesEntity countriesEntity = eachEmployeesEntity.getDepartmentsEntity().getLocationsEntity().getCountriesEntity();
+								CountriesPojo countriesPojo = new CountriesPojo();
+								BeanUtils.copyProperties(countriesEntity, countriesPojo);
+									RegionsEntity regionsEntity = eachEmployeesEntity.getDepartmentsEntity().getLocationsEntity().getCountriesEntity().getRegionsEntity();
+									RegionsPojo regionsPojo = new RegionsPojo();
+									BeanUtils.copyProperties(regionsEntity, regionsPojo);
+								countriesPojo.setRegionsPojo(regionsPojo);
+							locationsPojo.setCountriesPojo(countriesPojo);
+						departmentsPojo.setLocationsPojo(locationsPojo);
+						UserPojo userPojo = new UserPojo();
+						BeanUtils.copyProperties(eachEmployeesEntity.getUserEntity(), userPojo);
+						employeesPojo.setUserPojo(userPojo);
+					employeesPojo.setDepartmentsPojo(departmentsPojo);
+				allEmployeesPojo.add(employeesPojo);
+			}
+			return allEmployeesPojo;
+		}
 }
 	
 		

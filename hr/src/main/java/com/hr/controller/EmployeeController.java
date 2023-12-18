@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,6 +24,7 @@ import com.hr.service.EmployeeService;
 
 import jakarta.validation.Valid;
 
+@CrossOrigin
 @RestController
 @RequestMapping("/api/v1/employees")
 public class EmployeeController {
@@ -36,7 +38,7 @@ public class EmployeeController {
 	}
 
 	@DeleteMapping("/{id}")
-	public ResponseEntity<String> DeleteByEmployeeId( @PathVariable("id") int id) {
+	public ResponseEntity<String> DeleteByEmployeeId(@PathVariable("id") int id) {
 		return ResponseEntity.ok(employeeService.DeleteByEmployeeId(id));
 	}
   
@@ -66,7 +68,7 @@ public class EmployeeController {
 	}
 
 	@GetMapping("/{deptId}")
-	public ResponseEntity<List<EmployeesEntity>> getAllEmployeesByDepartmentId( @PathVariable("deptId") int deptId) {
+	public ResponseEntity<List<EmployeesPojo>> getAllEmployeesByDepartmentId( @PathVariable("deptId") int deptId) {
 		return ResponseEntity.ok(employeeService.getAllEmployeesByDepartmentId(deptId));
 	}
 	
@@ -108,4 +110,9 @@ public class EmployeeController {
 	public ResponseEntity<List<Map<String, Object>>> FindAllOpenPositionsWhichWereNotFilled() {
 		return ResponseEntity.ok(employeeService.FindAllOpenPositionsWhichWereNotFilled());
 	}	
+	
+	@GetMapping
+	public ResponseEntity<List<EmployeesPojo>> findAllEmployees(){
+		return ResponseEntity.ok(employeeService.findAllEmployees());
+	}
 }
