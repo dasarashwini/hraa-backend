@@ -19,6 +19,10 @@ public interface JobHistoryRepository extends JpaRepository<JobHistoryEntity,Job
     @Query("SELECT jh FROM JobHistoryEntity jh WHERE jh.employeesEntity.employeeId = :empId")
     List<JobHistoryEntity> findByEmployeeId();
 
+	boolean existsByEmployeesEntityEmployeeId(int employeeId);
+    
+   
+
 	
 	
 }
