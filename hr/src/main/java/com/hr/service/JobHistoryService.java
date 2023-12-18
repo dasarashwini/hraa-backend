@@ -1,5 +1,6 @@
 package com.hr.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.stereotype.Service; 
@@ -17,4 +18,8 @@ public interface JobHistoryService {
 	public Map<String, Integer> findExperienceOfEmployee(int employeeId);
 	
 	public Map<String, Integer> listAllEmployeesWithLessThanOneYearExperience(int empId);
+	
+	List<JobHistoryPojo> getAllJobHistories();
+
+	
 }

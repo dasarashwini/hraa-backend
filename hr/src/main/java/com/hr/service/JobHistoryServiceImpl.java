@@ -14,13 +14,20 @@ import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
 import com.hr.dao.JobHistoryRepository;
+import com.hr.dto.CountriesPojo;
+import com.hr.dto.DepartmentsPojo;
+import com.hr.dto.EmployeesPojo;
 import com.hr.dto.JobHistoryPojo;
+import com.hr.dto.JobsPojo;
+import com.hr.dto.LocationsPojo;
+import com.hr.dto.RegionsPojo;
 import com.hr.entity.DepartmentsEntity;
 import com.hr.entity.EmployeesEntity;
 import com.hr.entity.JobHistoryEntity;
 import com.hr.entity.JobsEntity;
 import com.hr.entity.LocationsEntity;
 import com.hr.exceptions.ResourceAlreadyExistsException;
+import com.hr.exceptions.ResourceNotFoundException;
 
 @Service
 public class JobHistoryServiceImpl implements JobHistoryService {
@@ -32,10 +39,13 @@ public class JobHistoryServiceImpl implements JobHistoryService {
 
 	@Override
 	public String addJobHistory(JobHistoryPojo newJobHistory) throws ResourceAlreadyExistsException {
+		 try {
+			 if (employeeExists(newJobHistory.getEmployeesPojo().getEmployeeId())) {
+		            throw new ResourceAlreadyExistsException("Employee ID already exists");
+		        }
+		 
 		
-
-		
-		JobHistoryEntity jobHistoryEntity = new JobHistoryEntity();
+        JobHistoryEntity jobHistoryEntity = new JobHistoryEntity();
 		BeanUtils.copyProperties(newJobHistory, jobHistoryEntity);
 		// Copying the Foreign key objects of Employees table
 		{
@@ -59,13 +69,29 @@ public class JobHistoryServiceImpl implements JobHistoryService {
 		}
 		jobHistoryRepository.save(jobHistoryEntity);
 		return "Record added successfully";
+		}catch(Exception e) {
+			throw new ResourceAlreadyExistsException("Error adding job history: " + e.getMessage());
 		}
-		
+	}
+
+
+
+	private boolean employeeExists(int employeeId) {
+		return jobHistoryRepository.existsByEmployeesEntityEmployeeId(employeeId);
+	}
 
 
 
 	@Override
-	public String modifyJobHistory(JobHistoryPojo newJobHistory) {
+	public String modifyJobHistory(JobHistoryPojo newJobHistory) throws ResourceNotFoundException {
+		
+		try {
+			int employeeId = newJobHistory.getEmployeesPojo().getEmployeeId();
+
+	        // Check if the employee ID exists
+	        if (!employeeExists(employeeId)) {
+	            throw new ResourceNotFoundException("Employee ID not found");
+	        }
 
 		JobHistoryEntity jobHistoryEntity = new JobHistoryEntity();
 		BeanUtils.copyProperties(newJobHistory, jobHistoryEntity);
@@ -93,17 +119,21 @@ public class JobHistoryServiceImpl implements JobHistoryService {
 		
 		jobHistoryRepository.save(jobHistoryEntity);
 		return "Record modified successfully";
+		}catch(Exception e) {
+			throw new RuntimeException("Failed to modify job history record",e);
+		}
 		}
 	
 	 
 	 @Override
-	 public Map<String, Integer> findExperienceOfEmployee(int employeeId) {
+	 public Map<String, Integer> findExperienceOfEmployee(int employeeId)throws ResourceNotFoundException {
 		  
 	  		
 	        List<JobHistoryEntity> jobHistories = jobHistoryRepository.findByEmployeesEntity_EmployeeId(employeeId);
 
 	        if (jobHistories.isEmpty()) {
-	            // Handle the case where there is no job history for the employee
+	        	
+	        
 	            Map<String, Integer> emptyResult = new HashMap<>();
 	            emptyResult.put("years", 0);
 	            emptyResult.put("months", 0);
@@ -123,15 +153,19 @@ public class JobHistoryServiceImpl implements JobHistoryService {
 	        result.put("days", period.getDays());
 
 	        return result;
-	    }
+	 }
+
 	 
 	 @Override
-	 public Map<String, Integer> listAllEmployeesWithLessThanOneYearExperience(int empId) {
+	 public Map<String, Integer> listAllEmployeesWithLessThanOneYearExperience(int empId)throws ResourceNotFoundException {
 	        // Retrieve job history records for the employee
 	        List<JobHistoryEntity> jobHistoryList = jobHistoryRepository.findByEmployeesEntity_EmployeeId(empId);
 
 	        // Calculate total duration of experience
 	        Period totalExperience = calculateTotalExperience(jobHistoryList);
+	        if (totalExperience.getYears() > 1 || (totalExperience.getYears() == 1 && totalExperience.getMonths() > 0)) {
+	            throw new ResourceNotFoundException("Employee with ID " + empId + " has more than one year of experience");
+	        }
 
 	        // Convert the Period to Map
 	        Map<String, Integer> experienceMap = convertPeriodToMap(totalExperience);
@@ -159,9 +193,53 @@ public class JobHistoryServiceImpl implements JobHistoryService {
 	        experienceMap.put("days", period.getDays());
 	        return experienceMap;
 	    }
+	    
+	    @Override
+	    public List<JobHistoryPojo> getAllJobHistories() {
+	        List<JobHistoryEntity> allJobHistoryEntities = jobHistoryRepository.findAll();
+	        return convertToJobHistoryPojos(allJobHistoryEntities);
+	    }
+
+	    private List<JobHistoryPojo> convertToJobHistoryPojos(List<JobHistoryEntity> jobHistoryEntities) {
+	        List<JobHistoryPojo> jobHistoryPojos = new ArrayList<>();
+	        for (JobHistoryEntity entity : jobHistoryEntities) {
+	            if (entity != null) {
+	                JobHistoryPojo jobHistoryPojo = new JobHistoryPojo();
+	                BeanUtils.copyProperties(entity, jobHistoryPojo);
+
+	                EmployeesEntity employeesEntity = entity.getEmployeesEntity();
+	                if (employeesEntity != null) {
+	                    EmployeesPojo employeesPojo = new EmployeesPojo();
+	                    BeanUtils.copyProperties(employeesEntity, employeesPojo);
+	                    jobHistoryPojo.setEmployeesPojo(employeesPojo);
+	                }
+
+	                JobsEntity jobsEntity = entity.getJobsEntity();
+	                if (jobsEntity != null) {
+	                    JobsPojo jobsPojo = new JobsPojo();
+	                    BeanUtils.copyProperties(jobsEntity, jobsPojo);
+	                    jobHistoryPojo.setJobsPojo(jobsPojo);
+	                }
+
+	                DepartmentsEntity departmentsEntity = entity.getDepartmentsEntity();
+	                if (departmentsEntity != null) {
+	                    DepartmentsPojo departmentsPojo = new DepartmentsPojo();
+	                    BeanUtils.copyProperties(departmentsEntity, departmentsPojo);
+	                    jobHistoryPojo.setDepartmentsPojo(departmentsPojo);
+	                }
+
+	                jobHistoryPojos.add(jobHistoryPojo);
+	            }
+	        }
+	        return jobHistoryPojos;
+	    }
+	    
+
+
+}
+
 
 
 
 		
 	  
-}
